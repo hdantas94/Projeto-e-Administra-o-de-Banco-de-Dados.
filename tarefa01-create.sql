@@ -1,48 +1,39 @@
-SET FOREIGN_KEY_CHECKS=1; 
-
-drop table if exists atividade cascade;
-drop table if exists projeto cascade;
-drop table if exists departamento cascade;
-drop table if exists funcionario cascade;
 
 CREATE TABLE funcionario (
-	codigo int AUTO_INCREMENT,
-	nome varchar(50),
-	sexo char(1),
-	dataNasc date,
-	salario decimal(10,2),
-	codDepto int,
-	PRIMARY KEY (codigo),
-	FOREIGN KEY (codDepto) REFERENCES funcionario(codigo) on delete set null on update cascade
+	codigo SERIAL PRIMARY KEY,
+	nome VARCHAR(50),
+	sexo CHAR(1),
+	dataNasc DATE,
+	salario DECIMAL(10,2),
+	codDepto INT,
 );
 
 CREATE TABLE departamento (
-	codigo int AUTO_INCREMENT,
-	descricao varchar(50),
-	codGerente int,
-	PRIMARY KEY (codigo),
-	FOREIGN KEY (codGerente) REFERENCES funcionario(codigo) on delete set null on update cascade
+	codigo SERIAL PRIMARY KEY,
+	descricao VARCHAR(100),
+	codGerente INT REFERENCES funcionario(codigo),
 );
 
 CREATE TABLE projeto (
-	codigo int AUTO_INCREMENT,
-	nome varchar(50),
-	descricao varchar(250),
-	codDepto int,
-  codResponsavel int,
-	dataInicio date, 
-	dataFim date,
-	PRIMARY KEY (codigo),
-	FOREIGN KEY (codResponsavel) REFERENCES funcionario(codigo) on delete set null on update cascade,
-	FOREIGN KEY (codDepto) REFERENCES departamento(codigo) on delete set null on update cascade
+	codigo SERIAL PRIMARY KEY,
+	nome VARCHAR(50),
+	descricao VARCHAR(250),
+	dataInicio DATE, 
+	dataFim DATE,
+	codResponsavel INT REFERENCES funcionario(codigo), 
+	codDepto INT REFERENCES departamento(codigo)
 );
 
 CREATE TABLE atividade (
-	codigo int AUTO_INCREMENT,
-	descricao varchar(250),
-	codResponsavel int,
-	dataInicio date, 
-	dataFim date,
-	PRIMARY KEY (codigo),
-	FOREIGN KEY (codResponsavel) REFERENCES funcionario(codigo) on delete set null on update cascade
+	codigo SERIAL PRIMARY KEY,
+	descricao VARCHAR(250),
+	codResponsavel INT,
+	dataInicio DATE, 
+	dataFim DATE,
+	codResponsavel INT REFERENCES funcionario(codigo)
   );
+
+CREATE TABLE atividade_projeto (
+	cod_atividade INT REFERENCES atividade(codigo),
+	cod_projeto INT REFERENCES projeto(codigo)
+);
